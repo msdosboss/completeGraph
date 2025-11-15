@@ -8,7 +8,7 @@ const char *helloWorld(){
 // This creates a pointer that needs to be freed
 Vertex *createVertices(int n){
     Vertex *vertices = malloc(sizeof(Vertex) * n);
-    float step = 360 / n;
+    float step = 360.0f / (float)n;
     float location = 0.0f;
     for(int i = 0; i < n; i++){
         float locationRad = location * DEGTORADCON;

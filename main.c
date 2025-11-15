@@ -2,7 +2,7 @@
 
 int main(){
     printf(helloWorld());
-    int n = 20;
+    int n = 67;
     Vertex *vertices = createVertices(n);
     printVertices(vertices, n);
 
