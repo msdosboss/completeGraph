@@ -9,10 +9,11 @@
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 GLFWwindow *initWindow();
-unsigned int initVAO(Vertex *vertices, int n);
+unsigned int initVAO(Vertex *vertices, int *indicies, int n);
 char *readShaderFile(const char *fileName);
 unsigned int linkShaders(const char *vertexFileName,
                          const char *fragmentFileName);
 void processInput(GLFWwindow *window);
+int *edgesIndicies(int n);
 
 #endif
