@@ -9,10 +9,6 @@ int main(int argc, char **argv){
         n = atoi(argv[1]);
     }
 
-    int *indicies = edgesIndicies(n);
-    Vertex *vertices = createVertices(n);
-    printVertices(vertices, n);
-
 
     GLFWwindow *window;
     if((window = initWindow()) == NULL){
@@ -23,33 +19,63 @@ int main(int argc, char **argv){
 
     unsigned int edgeShaderProgram = linkShaders("shaders/edgeVertex.glsl", "shaders/edgeFragments.glsl");
 
-    unsigned int VAO = initVAO(vertices, indicies, n);
+    //int *indicies = edgesIndicies(n);
+    //Vertex *vertices = createVertices(n);
+
+    //unsigned int VAO = initVAO(vertices, indicies, n);
+    int osicaltionValue = 10;
+    unsigned int VAO[osicaltionValue];
+    unsigned int EBO[osicaltionValue];
+    int graphicsIdx = 0;
+    for(int i = n - (osicaltionValue / 2); i < n + osicaltionValue / 2; i++){
+        int *indicies = edgesIndicies(i);
+        Vertex *vertices = createVertices(i);
+        VAO[graphicsIdx] = initVAO(vertices, indicies, i, &(EBO[graphicsIdx]));
+        graphicsIdx++;
+        free(indicies);
+        free(vertices);
+    }
     mat4 projection;
     glm_mat4_identity(projection);
     glm_ortho(0.0f, WIDTH, HEIGHT, 0.0f, -1.0f, 1.0f, projection);
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
 
     glEnable(GL_PROGRAM_POINT_SIZE);
+    glUseProgram(edgeShaderProgram);
+    glUniformMatrix4fv(glGetUniformLocation(edgeShaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
 
     while(!glfwWindowShouldClose(window)){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwPollEvents();
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
-        glDrawArrays(GL_POINTS, 0, n);
+        glfwSwapBuffers(window);
+        graphicsIdx = 0;
+        for(int i = n - osicaltionValue / 2; i < n + osicaltionValue / 2; i++){
+            printf("n = %d\tDrawing %d vertices\t Drawing %d edges\n", i, i, ((i - 1) * i) / 2);
+            glUseProgram(shaderProgram);
+            glfwPollEvents();
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glBindVertexArray(VAO[graphicsIdx]);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[graphicsIdx++]);
+            glDrawArrays(GL_POINTS, 0, i);
 
+            glUseProgram(edgeShaderProgram);
+            glDrawElements(GL_LINES, ((i - 1) * i), GL_UNSIGNED_INT, 0);
+            glfwSwapBuffers(window);
+            sleep(1);
+            processInput(window);
+        }
+        /*glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
+        glDrawArrays(GL_POINTS, 0, n);
         glUseProgram(edgeShaderProgram);
         glUniformMatrix4fv(glGetUniformLocation(edgeShaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
-        glDrawElements(GL_LINES, ((n - 1) * n), GL_UNSIGNED_INT, 0);
-
-        processInput(window);
+        glDrawElements(GL_LINES, ((n  - 1) * n), GL_UNSIGNED_INT, 0);*/
 
         glfwSwapBuffers(window);
+        processInput(window);
     }
 
-    free(indicies);
-    free(vertices);
     return 0;
 }
 
@@ -150,17 +176,16 @@ unsigned int linkShaders(const char *vertexFileName, const char *fragmentFileNam
 }
 
 
-unsigned int initVAO(Vertex *vertices, int* indicies, int n){
+unsigned int initVAO(Vertex *vertices, int* indicies, int n, unsigned int *EBO){
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     unsigned int VBO;
     glGenBuffers(1, &VBO);
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    glGenBuffers(1, EBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, n * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
     int indiciesLen = ((n - 1) * n);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * indiciesLen, indicies, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
