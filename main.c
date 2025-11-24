@@ -52,6 +52,7 @@ int main(int argc, char **argv){
         graphicsIdx = 0;
         for(int i = n - osicaltionValue / 2; i < n + osicaltionValue / 2; i++){
             printf("n = %d\tDrawing %d vertices\t Drawing %d edges\n", i, i, ((i - 1) * i) / 2);
+            //orca
             glUseProgram(shaderProgram);
             glfwPollEvents();
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
