@@ -9,12 +9,19 @@
 #define HEIGHT 600
 #define DEGTORADCON M_PI / 180.0f
 
-typedef struct {
-  vec2 coords;
-} Vertex;
+struct Vertex {
+	vec2 coords;
+	struct Vertex **edges;
+	int *edgeWeights;
+	int edgeCount;
+};
+
+
+typedef struct Vertex Vertex;
 
 const char *helloWorld();
 Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
+int parseMatrix(int **matrix, int len);
 
 #endif

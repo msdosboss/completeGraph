@@ -1,5 +1,7 @@
 #include "main.h"
 
+void debugWrapper(void); //function prototype - defined in graph.c - temporary only
+
 int main(int argc, char **argv){
     int n;
     if(argc != 2){
@@ -8,6 +10,9 @@ int main(int argc, char **argv){
     else{
         n = atoi(argv[1]);
     }
+
+	debugWrapper();
+	getchar(); //for the pause
 
 
     GLFWwindow *window;
