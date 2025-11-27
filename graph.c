@@ -73,7 +73,7 @@ int processMatrix(int **matrix, int len)
 
 	//DEBUG code below
 	for (int i = 0; i < len; i++) {
-		printf("Vertex %d with memory address %#X:\nNo. of edges: %d\n", i, graph_vertices + i, graph_vertices->edgeCount);
+		printf("Vertex %d with memory address %#X:\nNo. of edges: %d\n", i, graph_vertices + i, graph_vertices[i].edgeCount);
 		for (int j = 0; j < len; j++) {
 			if (j < graph_vertices[i].edgeCount)
 				printf("\tPoints to: %#X\n", graph_vertices[i].edges[j]);
