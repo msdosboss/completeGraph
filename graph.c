@@ -43,10 +43,13 @@ int cool_array[5][5] = {
 int processMatrix(int **matrix, int len)
 {
 	int edge_count = 0;
+    int edgeCountVertex[len];
+    memset(edgeCountVertex, 0, len);
 	for (int i = 0; i < len; i++) {
 		for (int j = 0; j < len; j++) {
 			if (matrix[i][j])
 				edge_count += matrix[i][j];
+                edgeCountVertex[i]++;
 		}
 	}
 	printf("DEBUG: edge count: %d\n", edge_count);
@@ -80,14 +83,14 @@ int processMatrix(int **matrix, int len)
 }
 
 //can remove this later.
-void debugWrapper(void) { 
-	int **cool_array_fixed = malloc(sizeof(int) * 5);
+void debugWrapper(void) {
+	int **cool_array_fixed = malloc(sizeof(int *) * 5);
 	for (int i = 0; i < 5; i++) {
 		cool_array_fixed[i] = (int *) malloc(sizeof(int) * 5);
 		for (int j = 0; j < 5; j++)
 			cool_array_fixed[i][j] = cool_array[i][j];
 	}
-	processMatrix(cool_array_fixed, 5); 
+	processMatrix(cool_array_fixed, 5);
 
 	for (int i = 0; i < 5; i++) {
 		free(cool_array_fixed[i]);

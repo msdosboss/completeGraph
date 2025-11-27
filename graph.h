@@ -4,18 +4,18 @@
 #include "cglm/cglm.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define WIDTH 800
 #define HEIGHT 600
 #define DEGTORADCON M_PI / 180.0f
 
 struct Vertex {
-	vec2 coords;
-	struct Vertex **edges;
-	int *edgeWeights;
-	int edgeCount;
+  vec2 coords;
+  struct Vertex **edges;
+  int *edgeWeights;
+  int edgeCount;
 };
-
 
 typedef struct Vertex Vertex;
 
