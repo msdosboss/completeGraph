@@ -11,6 +11,8 @@ Vertex *createVertices(int n){
     float step = 360.0f / (float)n;
     float location = 0.0f;
     for(int i = 0; i < n; i++){
+        // Added id attrib to make it easier to identify each vertex
+        vertices[i].id = i;
         float locationRad = location * DEGTORADCON;
         vertices[i].coords[0] = cos(locationRad); //coords[0] is x
         vertices[i].coords[1] = sin(locationRad); //coords[1] is y
@@ -40,7 +42,58 @@ int cool_array[5][5] = {
 	{0, 1, 1, 0, 0}
 };
 
-int processMatrix(int **matrix, int len)
+int weight_matrix[5][5] = {
+    {0, 2, 0, 5, 0},
+    {2, 0, 0, 7, 5},
+    {0, 0, 0, 12, 11},
+    {5, 7, 12, 0, 0},
+    {0, 5, 11, 0, 0}
+};
+
+
+Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len)
+{
+    // Creates The Vertices that make up the graph
+    Vertex *graphVertices = createVertices(len);
+    // Count the amount of edges for each vertex
+    for(int i = 0; i < len; i++){
+        for(int j = 0; j < len; j++){
+            if(adjacencyMatrix[i][j]){
+                graphVertices[i].edgeCount++;
+            }
+        }
+    }
+
+    // Malloc the edge points and weights
+    for(int i = 0; i < len; i++){
+        graphVertices[i].edges = malloc(sizeof(Vertex *) * graphVertices[i].edgeCount);
+        graphVertices[i].edgeWeights = malloc(sizeof(int) * graphVertices[i].edgeCount);
+    }
+
+    for(int i = 0; i < len; i++){
+        int idx = 0;
+        for(int j = 0; j < len; j++){
+            if(adjacencyMatrix[i][j]){
+                // setting up weights and edges
+                // edges will have their weights be on the same idx
+                graphVertices[i].edges[idx] = &graphVertices[j];
+                graphVertices[i].edgeWeights[idx++] = weightMatrix[i][j];
+            }
+        }
+    }
+
+    for(int i = 0; i < len; i++){
+        printf("node: %d is connected to\n", graphVertices[i].id);
+        for(int j = 0; j < graphVertices[i].edgeCount; j++){
+            printf("\tnode: %d with a weight of %d\n", graphVertices[i].edges[j]->id, graphVertices[i].edgeWeights[j]);
+        }
+    }
+
+    return graphVertices;
+}
+
+
+Vertex *processMatrix(int **matrix, int len)
 {
 	int edge_count = 0;
     int edgeCountVertex[len];
@@ -80,6 +133,7 @@ int processMatrix(int **matrix, int len)
 			else break;
 		}
 	}
+    return graph_vertices;
 }
 
 //can remove this later.
@@ -90,10 +144,22 @@ void debugWrapper(void) {
 		for (int j = 0; j < 5; j++)
 			cool_array_fixed[i][j] = cool_array[i][j];
 	}
+	int **weight_array_fixed = malloc(sizeof(int *) * 5);
+	for (int i = 0; i < 5; i++) {
+		weight_array_fixed[i] = (int *) malloc(sizeof(int) * 5);
+		for (int j = 0; j < 5; j++)
+			weight_array_fixed[i][j] = weight_matrix[i][j];
+	}
 	processMatrix(cool_array_fixed, 5);
+    // Not a full clean up, still malloced mem in the struct
+    free(processMatrixJT(cool_array_fixed, weight_array_fixed, 5));
 
 	for (int i = 0; i < 5; i++) {
 		free(cool_array_fixed[i]);
 	}
 	free(cool_array_fixed);
+	for (int i = 0; i < 5; i++) {
+		free(weight_array_fixed[i]);
+	}
+	free(weight_array_fixed);
 }

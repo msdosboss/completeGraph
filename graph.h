@@ -11,6 +11,7 @@
 #define DEGTORADCON M_PI / 180.0f
 
 struct Vertex {
+  int id;
   vec2 coords;
   struct Vertex **edges;
   int *edgeWeights;
@@ -22,6 +23,7 @@ typedef struct Vertex Vertex;
 const char *helloWorld();
 Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
-int parseMatrix(int **matrix, int len);
+Vertex *processMatrix(int **matrix, int len);
+Vertex *processMatrixJt(int **adjacencyMatrix, int **weightMatrix, int len);
 
 #endif
