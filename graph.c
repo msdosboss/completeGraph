@@ -51,6 +51,14 @@ int weight_matrix[5][5] = {
 };
 
 
+void graphCleanup(Vertex *graphVertices, int len){
+    for(int i = 0; i < len; i++){
+        free(graphVertices[i].edges);
+        free(graphVertices[i].edgeWeights);
+    }
+    free(graphVertices);
+}
+
 Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len)
 {
     // Creates The Vertices that make up the graph
@@ -151,8 +159,7 @@ void debugWrapper(void) {
 			weight_array_fixed[i][j] = weight_matrix[i][j];
 	}
 	processMatrix(cool_array_fixed, 5);
-    // Not a full clean up, still malloced mem in the struct
-    free(processMatrixJT(cool_array_fixed, weight_array_fixed, 5));
+    graphCleanup(processMatrixJT(cool_array_fixed, weight_array_fixed, 5), 5);
 
 	for (int i = 0; i < 5; i++) {
 		free(cool_array_fixed[i]);
