@@ -145,7 +145,7 @@ Vertex *processMatrix(int **matrix, int len)
 }
 
 //can remove this later.
-void debugWrapper(void) {
+Vertex *debugWrapper(void) {
 	int **cool_array_fixed = malloc(sizeof(int *) * 5);
 	for (int i = 0; i < 5; i++) {
 		cool_array_fixed[i] = (int *) malloc(sizeof(int) * 5);
@@ -159,7 +159,7 @@ void debugWrapper(void) {
 			weight_array_fixed[i][j] = weight_matrix[i][j];
 	}
 	processMatrix(cool_array_fixed, 5);
-    graphCleanup(processMatrixJT(cool_array_fixed, weight_array_fixed, 5), 5);
+    Vertex *vertices = processMatrixJT(cool_array_fixed, weight_array_fixed, 5);
 
 	for (int i = 0; i < 5; i++) {
 		free(cool_array_fixed[i]);
@@ -169,4 +169,6 @@ void debugWrapper(void) {
 		free(weight_array_fixed[i]);
 	}
 	free(weight_array_fixed);
+
+    return vertices;
 }

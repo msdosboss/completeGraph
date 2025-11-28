@@ -25,5 +25,6 @@ Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
 Vertex *processMatrix(int **matrix, int len);
 Vertex *processMatrixJt(int **adjacencyMatrix, int **weightMatrix, int len);
+void graphCleanup(Vertex *graphVertices, int len);
 
 #endif
