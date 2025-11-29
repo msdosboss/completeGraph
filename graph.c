@@ -5,6 +5,27 @@ const char *helloWorld(){
 }
 
 
+int **createAdjcencyMatrixCompleteGraph(int n){
+    int **matrix = malloc(sizeof(int *) * n);
+    for(int i = 0; i < n; i++){
+        matrix[i] = malloc(sizeof(int) * n);
+    }
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            if(i != j){
+                matrix[i][j] = 1;
+            }
+            else{
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    return matrix;
+}
+
+
 // This creates a pointer that needs to be freed
 Vertex *createVertices(int n){
     Vertex *vertices = malloc(sizeof(Vertex) * n);

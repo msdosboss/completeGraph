@@ -11,6 +11,10 @@ int main(int argc, char **argv){
         n = atoi(argv[1]);
     }
 
+    int **matrix = createAdjcencyMatrixCompleteGraph(n);
+    Vertex *completeVertices = processMatrixJT(matrix, matrix, n);
+    unsigned int totalEdgesComplete = totalEdges(completeVertices, n);
+
 	Vertex *vertices = debugWrapper();
     unsigned int total_edges = totalEdges(vertices, 5);
 	//getchar(); //for the pause
@@ -28,6 +32,9 @@ int main(int argc, char **argv){
 
     unsigned int EBO;
     unsigned int VAO = initVAONew(vertices, 5, &EBO);
+
+    unsigned int EBOComplete;
+    unsigned int VAOComplete = initVAONew(completeVertices, 5, &EBOComplete);
 
     //int *indicies = edgesIndicies(n);
     //Vertex *vertices = createVertices(n);
@@ -61,6 +68,8 @@ int main(int argc, char **argv){
         glfwSwapBuffers(window);
 
         drawGraph(window, shaderProgram, edgeShaderProgram, VAO, EBO, 5, total_edges);
+        sleep(1);
+        drawGraph(window, shaderProgram, edgeShaderProgram, VAOComplete, EBOComplete, n, totalEdgesComplete);
         sleep(1);
 
         /*graphicsIdx = 0;
@@ -273,6 +282,9 @@ unsigned int initVAONew(Vertex *vertices, int len, unsigned int *EBO)
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
     glEnableVertexAttribArray(0);
+
+    free(drawVertices);
+    free(indicies);
 
     return VAO;
 
