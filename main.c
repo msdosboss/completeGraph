@@ -34,7 +34,7 @@ int main(int argc, char **argv){
     unsigned int VAO = initVAONew(vertices, 5, &EBO);
 
     unsigned int EBOComplete;
-    unsigned int VAOComplete = initVAONew(completeVertices, 5, &EBOComplete);
+    unsigned int VAOComplete = initVAONew(completeVertices, n, &EBOComplete);
 
     //int *indicies = edgesIndicies(n);
     //Vertex *vertices = createVertices(n);
