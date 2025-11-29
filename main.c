@@ -102,8 +102,8 @@ void drawGraph(GLFWwindow *window, unsigned int point_shader_program, unsigned i
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glDrawArrays(GL_POINTS, 0, len);
 
-    //glUseProgram(edge_shader_program);
-    //glDrawElements(GL_LINES, total_edges * 2, GL_UNSIGNED_INT, 0);
+    glUseProgram(edge_shader_program);
+    glDrawElements(GL_LINES, total_edges * 2, GL_UNSIGNED_INT, 0);
     glfwSwapBuffers(window);
 
 }
@@ -247,9 +247,9 @@ unsigned int initVAONew(Vertex *vertices, int len, unsigned int *EBO)
     unsigned int VAO;
     unsigned int VBO;
 
-    int total_edges = totalEdges(vertices, len);
+    unsigned int total_edges = totalEdges(vertices, len);
     // 2 floats per point (x, y)
-    float *drawVertices = malloc(sizeof(float) * total_edges * 2);
+    float *drawVertices = malloc(sizeof(float) * len * 2);
 
     int idx = 0;
     // loading point vertices
@@ -265,13 +265,13 @@ unsigned int initVAONew(Vertex *vertices, int len, unsigned int *EBO)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, len * sizeof(Vertex), drawVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, len * 2 * sizeof(float), drawVertices, GL_STATIC_DRAW);
 
     unsigned int *indicies = edgesIndiciesNew(vertices, len);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * total_edges * 2, indicies, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
     glEnableVertexAttribArray(0);
 
     return VAO;
