@@ -1,10 +1,10 @@
 
 ifeq ($(OS),Windows_NT)
-all: main.o graph.o glad.o
-	gcc main.o graph.o glad.o -o main -lm -lglfw3 --define-macro $(OS)
+all: main.o graph.o glad.o openGLFunctions.o
+	gcc main.o graph.o glad.o openGLFunctions.o -o main -lm -lglfw3 --define-macro $(OS)
 else
-all: main.o graph.o glad.o
-	gcc main.o graph.o glad.o -o main -lm -lglfw
+all: main.o graph.o glad.o openGLFunctions.o
+	gcc main.o graph.o glad.o openGLFunctions.o -o main -lm -lglfw
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -29,6 +29,14 @@ graph.o: graph.c
 else
 graph.o: graph.c
 	gcc -c graph.c -o graph.o
+endif
+
+ifeq ($(OS),Windows_NT)
+openGLFunctions.o: openGLFunctions.c
+	gcc -c openGLFunctions.c -o openGLFunctions.o --define-macro $(OS)
+else
+openGLFunctions.o: openGLFunctions.c
+	gcc -c openGLFunctions.c -o openGLFunctions.o
 endif
 
 clean:
