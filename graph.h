@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -27,5 +28,6 @@ Vertex *processMatrix(int **matrix, int len);
 Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len);
 void graphCleanup(Vertex *graphVertices, int len);
 int **createAdjcencyMatrixCompleteGraph(int n);
+int **createAdjcencyMatrixRandomGraph(int n);
 
 #endif

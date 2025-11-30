@@ -15,7 +15,11 @@ int main(int argc, char **argv){
     Vertex *completeVertices = processMatrixJT(matrix, matrix, n);
     unsigned int totalEdgesComplete = totalEdges(completeVertices, n);
 
-	Vertex *vertices = debugWrapper();
+    int **matrixRandom = createAdjcencyMatrixRandomGraph(n);
+    Vertex *randomVertices = processMatrixJT(matrixRandom, matrixRandom, n);
+    unsigned int totalEdgesRandom = totalEdges(randomVertices, n);
+
+    Vertex *vertices = debugWrapper();
     unsigned int total_edges = totalEdges(vertices, 5);
 	//getchar(); //for the pause
 
@@ -36,6 +40,8 @@ int main(int argc, char **argv){
     unsigned int EBOComplete;
     unsigned int VAOComplete = initVAONew(completeVertices, n, &EBOComplete);
 
+    unsigned int EBORandom;
+    unsigned int VAORandom = initVAONew(randomVertices, n, &EBORandom);
     //int *indicies = edgesIndicies(n);
     //Vertex *vertices = createVertices(n);
 
@@ -70,6 +76,8 @@ int main(int argc, char **argv){
         drawGraph(window, shaderProgram, edgeShaderProgram, VAO, EBO, 5, total_edges);
         sleep(1);
         drawGraph(window, shaderProgram, edgeShaderProgram, VAOComplete, EBOComplete, n, totalEdgesComplete);
+        sleep(1);
+        drawGraph(window, shaderProgram, edgeShaderProgram, VAORandom, EBORandom, n, totalEdgesRandom);
         sleep(1);
 
         /*graphicsIdx = 0;
