@@ -143,13 +143,6 @@ Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len)
         }
     }
 
-    for(int i = 0; i < len; i++){
-        printf("node: %d is connected to\n", graphVertices[i].id);
-        for(int j = 0; j < graphVertices[i].edgeCount; j++){
-            printf("\tnode: %d with a weight of %d\n", graphVertices[i].edges[j]->id, graphVertices[i].edgeWeights[j]);
-        }
-    }
-
     return graphVertices;
 }
 
@@ -179,5 +172,117 @@ Vertex *debugWrapper(void) {
 	}
 	free(weight_array_fixed);
 
+	struct TableEntry *path_result = solvePath(vertices, 5, 4);
+	printf("Cumulative weight of solved path: %d\n", findListEnd(path_result)->cumulative_weight);	
+	struct TableEntry *current_path_point = path_result;
+	while (current_path_point->next != NULL) {
+		printf("Node #%d\n", current_path_point->node->id);
+		current_path_point = current_path_point->next;
+	}
+
+
     return vertices;
 }
+
+// *graph is the starting Vertex
+struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
+{
+	struct TableEntry table[len][len];
+	for (int i = 0; i < len; i++) { 
+		for (int j = 0; j < len; j++) {
+			table[i][j].next = NULL;
+			table[i][j].cumulative_weight = 0;
+			table[i][j].node = NULL;
+		}
+	}
+	printf("DEBUG orca1\n");
+	fflush(stdout);
+	Vertex *sets[len];
+	for (int i = 0; i < len; i++)
+		sets[i] = NULL;
+	int set_idx = 0;
+	sets[set_idx] = graph;
+	for (; set_idx < len; set_idx++) {
+		printf("DEBUG orca2\n");
+		fflush(stdout);
+		for (int i = 0; i < sets[set_idx]->edgeCount; i++) {
+			printf("DEBUG orca3\n");
+			fflush(stdout);
+			struct TableEntry *current_entry = &table[set_idx][sets[set_idx]->edges[i]->id];
+			int table_weight_ref = (set_idx == 0) ? 0 : findListEnd(&table[set_idx - 1][sets[set_idx]->id])->cumulative_weight;
+			current_entry->next = malloc(sizeof(struct TableEntry));
+			current_entry->next->next = NULL;
+			current_entry->next->cumulative_weight = \
+			table_weight_ref + sets[set_idx]->edgeWeights[i];
+			current_entry->next->node = sets[set_idx];
+			current_entry = current_entry->next;
+		}
+		struct TableEntry *smallest_entry = NULL;
+		for (int i = 0; i < len; i++) {
+			printf("DEBUG orca4\n");
+			fflush(stdout);
+
+			if (findListEnd(&table[set_idx][i])->node == NULL) {
+				printf("reached orca64 checkpoint\n");
+				continue;
+			}
+			for (int j = 0; j <= set_idx; j++) {
+				if (&graph[i] == sets[j])
+					goto duplicate;	
+				;
+			}
+			if (smallest_entry == NULL) {
+				smallest_entry = &table[set_idx][i];
+				sets[set_idx + 1] = &graph[i];
+				printf("DEBUG - smallest_entry was NULL, initialized\n");
+				fflush(stdout);
+				continue;
+			}
+			
+			struct TableEntry *end = findListEnd(smallest_entry);
+			struct TableEntry *table_end = findListEnd(&table[set_idx][i]);
+			if (end->cumulative_weight > table_end->cumulative_weight) {
+				smallest_entry = &table[set_idx][i];
+				sets[set_idx + 1] = &graph[i];
+				printf("DEBUG - replacing smallest entry with %#X", &table[set_idx][i]);
+				fflush(stdout);
+			}
+
+			duplicate:
+				printf("Orca sent to duplicate\n");
+				continue;
+		}
+		printf("DEBUG orca5\n");
+		fflush(stdout);
+		struct TableEntry *small_end = findListEnd(smallest_entry);
+		printf("DEBUG orca6\n");
+		fflush(stdout);
+		if (small_end->node->id == dest_id) {
+			for (int ii = 0; ii < len; ii++) {
+				for (int jj = 0; jj < len; jj++) {
+					printf("orca16: %d %d\t", findListEnd(&table[ii][jj])->cumulative_weight,
+						(findListEnd(&table[ii][jj])->node) == NULL ? -99 : findListEnd(&table[ii][jj])->node->id
+					);
+				}
+				putchar('\n');
+			}
+			return smallest_entry->next;
+		}
+	}
+
+	//TODO - actually free the memory
+}
+
+struct TableEntry *findListEnd(struct TableEntry *list)
+{
+	if (list == NULL) {
+		fprintf(stderr, "NULL pointer passed to findListEnd()\n");
+		return NULL;
+	}
+	struct TableEntry *current = list;
+	while (current->next != NULL)
+		current = current->next;
+
+	return current;
+}
+
