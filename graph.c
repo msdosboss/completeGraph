@@ -14,14 +14,24 @@ int **createAdjcencyMatrixRandomGraph(int n){
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
             // 25% chance
-            if(i != j && ((rand() % 4) == 0)){
+            if(((rand() % 4) == 0) && i < j){
                 matrix[i][j] = 1;
-            }
-            else{
+            } else if (i != j) {
+				matrix[i][j] = matrix[j][i];
+			} else {
                 matrix[i][j] = 0;
             }
         }
     }
+
+	//DEBUG stuff
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (!(matrix[i][j] == matrix[j][i])) {
+				fprintf(stderr, "Failed in createAdjcencyMatrixRandomGraph()\n");
+			}
+		}
+	}
 
     return matrix;
 }
