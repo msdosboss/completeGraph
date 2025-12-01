@@ -24,7 +24,6 @@ typedef struct Vertex Vertex;
 const char *helloWorld();
 Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
-Vertex *processMatrix(int **matrix, int len);
 Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len);
 void graphCleanup(Vertex *graphVertices, int len);
 int **createAdjcencyMatrixCompleteGraph(int n);
