@@ -195,19 +195,13 @@ struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
 			table[i][j].node = NULL;
 		}
 	}
-	printf("DEBUG orca1\n");
-	fflush(stdout);
 	Vertex *sets[len];
 	for (int i = 0; i < len; i++)
 		sets[i] = NULL;
 	int set_idx = 0;
 	sets[set_idx] = graph;
 	for (; set_idx < len; set_idx++) {
-		printf("DEBUG orca2\n");
-		fflush(stdout);
 		for (int i = 0; i < sets[set_idx]->edgeCount; i++) {
-			printf("DEBUG orca3\n");
-			fflush(stdout);
 			struct TableEntry *current_entry = &table[set_idx][sets[set_idx]->edges[i]->id];
 			int table_weight_ref = (set_idx == 0) ? 0 : findListEnd(&table[set_idx - 1][sets[set_idx]->id])->cumulative_weight;
 			current_entry->next = malloc(sizeof(struct TableEntry));
@@ -219,11 +213,7 @@ struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
 		}
 		struct TableEntry *smallest_entry = NULL;
 		for (int i = 0; i < len; i++) {
-			printf("DEBUG orca4\n");
-			fflush(stdout);
-
 			if (findListEnd(&table[set_idx][i])->node == NULL) {
-				printf("reached orca64 checkpoint\n");
 				continue;
 			}
 			for (int j = 0; j <= set_idx; j++) {
@@ -234,8 +224,6 @@ struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
 			if (smallest_entry == NULL) {
 				smallest_entry = &table[set_idx][i];
 				sets[set_idx + 1] = &graph[i];
-				printf("DEBUG - smallest_entry was NULL, initialized\n");
-				fflush(stdout);
 				continue;
 			}
 			
@@ -244,19 +232,14 @@ struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
 			if (end->cumulative_weight > table_end->cumulative_weight) {
 				smallest_entry = &table[set_idx][i];
 				sets[set_idx + 1] = &graph[i];
-				printf("DEBUG - replacing smallest entry with %#X", &table[set_idx][i]);
+				printf("DEBUG - replacing smallest entry with %#X\n", &table[set_idx][i]);
 				fflush(stdout);
 			}
 
 			duplicate:
-				printf("Orca sent to duplicate\n");
 				continue;
 		}
-		printf("DEBUG orca5\n");
-		fflush(stdout);
 		struct TableEntry *small_end = findListEnd(smallest_entry);
-		printf("DEBUG orca6\n");
-		fflush(stdout);
 		if (small_end->node->id == dest_id) {
 			for (int ii = 0; ii < len; ii++) {
 				for (int jj = 0; jj < len; jj++) {
