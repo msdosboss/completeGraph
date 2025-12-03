@@ -184,6 +184,18 @@ Vertex *debugWrapper(void) {
     return vertices;
 }
 
+
+int solvePathTwo(Vertex *graph, int len, int dest_id)
+{
+    // Stores the current best-known distance to each vertex.
+    int dist[len];
+    // Stores the predecessor vertex on the shortest path
+    int prev[len];
+
+    return 0;
+}
+
+
 // *graph is the starting Vertex
 struct TableEntry *solvePath (Vertex *graph, int len, int dest_id)
 {
