@@ -163,6 +163,11 @@ Vertex *debugWrapper(void) {
 	}
     Vertex *vertices = processMatrixJT(cool_array_fixed, weight_array_fixed, 5);
 
+	int *solved = solvePathTwo(vertices, 5, 4);
+	for (int i = 0; solved[i] != -1; i++) {
+		printf("i: %d solved[i] %d\n", i, solved[i]);
+	}
+
 	for (int i = 0; i < 5; i++) {
 		free(cool_array_fixed[i]);
 	}
@@ -185,14 +190,55 @@ Vertex *debugWrapper(void) {
 }
 
 
-int solvePathTwo(Vertex *graph, int len, int dest_id)
+//return pointer needs to be free'd
+int *solvePathTwo(Vertex *graph, int len, int dest_id)
 {
     // Stores the current best-known distance to each vertex.
     int dist[len];
     // Stores the predecessor vertex on the shortest path
     int prev[len];
+	for (int i = 0; i < len; i++) {
+		dist[i] = -1;
+		prev[i] = -1;
+	}
+	dist[0] = 0;
 
-    return 0;
+	dist[0] = 0;
+	for (int i = 0; i < len; i++) {
+		int ec = graph[i].edgeCount;
+		for (int j = 0; j < ec; j++) {
+			int idx = graph[i].edges[j]->id;
+			if ((dist[idx] > graph[i].edgeWeights[j] + dist[i]) || dist[idx] == -1) {
+				dist[idx] = graph[i].edgeWeights[j] + dist[i];
+				prev[idx] = i;
+			}
+		}
+	}
+
+	int *result = malloc(len * sizeof(int));
+	//memset(result, -1, len);
+	for(int i = 0; i < len; i++) {
+		result[i] = -1;
+	}
+	int result_counter = 0;
+	int idx = dest_id;
+	while (idx != 0) {
+		result[result_counter++] = prev[idx];
+		idx = prev[idx];
+	}
+
+	int left = 0;
+	int right = result_counter - 1;
+
+	while (left < right) {
+		int tmp = result[left];
+		result[left++] = result[right];
+		result[right--] = tmp;
+	}
+	result[result_counter] = dest_id;
+
+
+    return result;
 }
 
 
