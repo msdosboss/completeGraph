@@ -34,7 +34,6 @@ Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len);
 void graphCleanup(Vertex *graphVertices, int len);
 int **createAdjcencyMatrixCompleteGraph(int n);
 int **createAdjcencyMatrixRandomGraph(int n);
-struct TableEntry *solvePath (Vertex *graph, int len, int dest_id);
 struct TableEntry *findListEnd(struct TableEntry *list);
 int *solvePathTwo(Vertex *vertices, int len, int dest_id);
 
