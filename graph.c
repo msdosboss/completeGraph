@@ -161,7 +161,7 @@ Vertex *debugWrapper(void) {
 		for (int j = 0; j < 5; j++)
 			weight_array_fixed[i][j] = weight_matrix[i][j];
 	}
-    Vertex *vertices = processMatrixJT(cool_array_fixed, weight_array_fixed, 5);
+    Vertex *vertices = processMatrixJT(cool_array_fixed, cool_array_fixed, 5);
 
 	int *solved = solvePathTwo(vertices, 5, 4);
 	for (int i = 0; solved[i] != -1; i++) {
@@ -188,27 +188,42 @@ int *solvePathTwo(Vertex *graph, int len, int dest_id)
     int dist[len];
     // Stores the predecessor vertex on the shortest path
     int prev[len];
+    // Stores previous set information
+    int set[len];
 	for (int i = 0; i < len; i++) {
 		dist[i] = -1;
 		prev[i] = -1;
+        set[i] = 0;
 	}
+    set[0] = 1;
 	dist[0] = 0;
 
-	dist[0] = 0;
-	for (int i = 0; i < len; i++) {
-		int ec = graph[i].edgeCount;
-		for (int j = 0; j < ec; j++) {
-			int idx = graph[i].edges[j]->id;
-			if ((dist[idx] > graph[i].edgeWeights[j] + dist[i]) || dist[idx] == -1) {
-				dist[idx] = graph[i].edgeWeights[j] + dist[i];
-				prev[idx] = i;
-			}
-		}
-	}
+    int currentIdx = 0;
+    while (!set[dest_id]){
+        int ec = graph[currentIdx].edgeCount;
+        for (int i = 0; i < ec; i++){
+            Vertex *currentEdge = graph[currentIdx].edges[i];
+            int currentEdgeId = graph[currentIdx].edges[i]->id;
+            int currentEdgeWeight = graph[currentIdx].edgeWeights[i];
+            if ((dist[currentEdgeId] < currentEdgeWeight + dist[graph[currentIdx].id] || dist[currentEdgeId] == -1) && !set[currentEdgeId]){
+                prev[currentEdgeId] = graph[currentIdx].id;
+                dist[currentEdgeId] =  currentEdgeWeight + dist[graph[currentIdx].id];
+            }
+        }
+        int weightMin = -1;
+        int newSetIdx = -1;
+        for (int i = 0; i < len; i++){
+            if(!set[i] && (weightMin > dist[i] || weightMin == -1)){
+                weightMin = dist[i];
+                newSetIdx = i;
+            }
+        }
+        set[newSetIdx] = 1;
+    }
 
 	int *result = malloc(len * sizeof(int));
 	//memset(result, -1, len);
-	for(int i = 0; i < len; i++) {
+	for (int i = 0; i < len; i++) {
 		result[i] = -1;
 	}
 	int result_counter = 0;
@@ -227,7 +242,6 @@ int *solvePathTwo(Vertex *graph, int len, int dest_id)
 		result[right--] = tmp;
 	}
 	result[result_counter] = dest_id;
-
 
     return result;
 }
