@@ -202,10 +202,10 @@ int *solvePathTwo(Vertex *graph, int len, int dest_id)
     while (!set[dest_id]){
         int ec = graph[currentIdx].edgeCount;
         for (int i = 0; i < ec; i++){
-            Vertex *currentEdge = graph[currentIdx].edges[i];
+            //Vertex *currentEdge = graph[currentIdx].edges[i];
             int currentEdgeId = graph[currentIdx].edges[i]->id;
             int currentEdgeWeight = graph[currentIdx].edgeWeights[i];
-            if ((dist[currentEdgeId] < currentEdgeWeight + dist[graph[currentIdx].id] || dist[currentEdgeId] == -1) && !set[currentEdgeId]){
+            if ((dist[currentEdgeId] > currentEdgeWeight + dist[graph[currentIdx].id] || dist[currentEdgeId] == -1) && !set[currentEdgeId]){
                 prev[currentEdgeId] = graph[currentIdx].id;
                 dist[currentEdgeId] =  currentEdgeWeight + dist[graph[currentIdx].id];
             }
@@ -213,12 +213,15 @@ int *solvePathTwo(Vertex *graph, int len, int dest_id)
         int weightMin = -1;
         int newSetIdx = -1;
         for (int i = 0; i < len; i++){
+			if (weightMin != -1 && dist[i] == -1) continue;
             if(!set[i] && (weightMin > dist[i] || weightMin == -1)){
                 weightMin = dist[i];
                 newSetIdx = i;
             }
         }
-        set[newSetIdx] = 1;
+        //set[newSetIdx] = 1;
+		set[currentIdx] = 1;
+		currentIdx = newSetIdx;
     }
 
 	int *result = malloc(len * sizeof(int));
