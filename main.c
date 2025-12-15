@@ -11,16 +11,18 @@ int main(int argc, char **argv){
         n = atoi(argv[1]);
     }
 
-    int **matrix = createAdjcencyMatrixCompleteGraph(n);
+    int **matrix = createAdjacencyMatrixCompleteGraph(n);
     Vertex *completeVertices = processMatrixJT(matrix, matrix, n);
     unsigned int totalEdgesComplete = totalEdges(completeVertices, n);
 
-    int **matrixRandom = createAdjcencyMatrixRandomGraph(n);
+    int **matrixRandom = createAdjacencyMatrixRandomGraph(n);
     Vertex *randomVertices = processMatrixJT(matrixRandom, matrixRandom, n);
     unsigned int totalEdgesRandom = totalEdges(randomVertices, n);
 
+	const int DEBUG_WRAPPER_LEN = 15;
+
     Vertex *vertices = debugWrapper();
-    unsigned int total_edges = totalEdges(vertices, 5);
+    unsigned int total_edges = totalEdges(vertices, DEBUG_WRAPPER_LEN);
 	//getchar(); //for the pause
 
 
@@ -35,7 +37,7 @@ int main(int argc, char **argv){
 
 
     unsigned int EBO;
-    unsigned int VAO = initVAONew(vertices, 5, &EBO);
+    unsigned int VAO = initVAONew(vertices, DEBUG_WRAPPER_LEN, &EBO);
 
     unsigned int EBOComplete;
     unsigned int VAOComplete = initVAONew(completeVertices, n, &EBOComplete);
@@ -71,14 +73,14 @@ int main(int argc, char **argv){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwPollEvents();
-        glfwSwapBuffers(window);
+        //glfwSwapBuffers(window);
 
-        drawGraph(window, shaderProgram, edgeShaderProgram, VAO, EBO, 5, total_edges);
-        sleep(1);
-        drawGraph(window, shaderProgram, edgeShaderProgram, VAOComplete, EBOComplete, n, totalEdgesComplete);
-        sleep(1);
-        drawGraph(window, shaderProgram, edgeShaderProgram, VAORandom, EBORandom, n, totalEdgesRandom);
-        sleep(1);
+        drawGraph(window, shaderProgram, edgeShaderProgram, VAO, EBO, DEBUG_WRAPPER_LEN, total_edges);
+        //sleep(1);
+        //drawGraph(window, shaderProgram, edgeShaderProgram, VAOComplete, EBOComplete, n, totalEdgesComplete);
+        //sleep(1);
+        //drawGraph(window, shaderProgram, edgeShaderProgram, VAORandom, EBORandom, n, totalEdgesRandom);
+        //sleep(1);
 
         /*graphicsIdx = 0;
         for(int i = n - osicaltionValue / 2; i < n + osicaltionValue / 2; i++){
@@ -103,7 +105,7 @@ int main(int argc, char **argv){
         glUniformMatrix4fv(glGetUniformLocation(edgeShaderProgram, "projection"), 1, GL_FALSE, (float*) projection);
         glDrawElements(GL_LINES, ((n  - 1) * n), GL_UNSIGNED_INT, 0);*/
 
-        glfwSwapBuffers(window);
+        //glfwSwapBuffers(window);
         processInput(window);
     }
 

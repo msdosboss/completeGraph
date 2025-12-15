@@ -32,9 +32,11 @@ Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
 Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len);
 void graphCleanup(Vertex *graphVertices, int len);
-int **createAdjcencyMatrixCompleteGraph(int n);
-int **createAdjcencyMatrixRandomGraph(int n);
+int **createAdjacencyMatrixCompleteGraph(int n);
+int **createAdjacencyMatrixRandomGraph(int n);
 struct TableEntry *findListEnd(struct TableEntry *list);
-int *solvePathTwo(Vertex *vertices, int len, int dest_id);
+int *solvePathTwo(Vertex *vertices, int len, int dest_id, int *total_weight);
+//void zeroMatrix(int **matrix, int n);
+void printMatrix(int **matrix, int n);
 
 #endif
