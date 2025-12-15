@@ -4,17 +4,39 @@
 #include "cglm/cglm.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #define WIDTH 800
 #define HEIGHT 600
 #define DEGTORADCON M_PI / 180.0f
 
-typedef struct {
+struct Vertex {
+  int id;
   vec2 coords;
-} Vertex;
+  struct Vertex **edges;
+  int *edgeWeights;
+  int edgeCount;
+};
+
+typedef struct Vertex Vertex;
+
+struct TableEntry {
+	struct TableEntry *next;
+	int cumulative_weight;
+	Vertex *node;
+};
 
 const char *helloWorld();
 Vertex *createVertices(int n);
 void printVertices(Vertex *vertices, int n);
+Vertex *processMatrixJT(int **adjacencyMatrix, int **weightMatrix, int len);
+void graphCleanup(Vertex *graphVertices, int len);
+int **createAdjacencyMatrixCompleteGraph(int n);
+int **createAdjacencyMatrixRandomGraph(int n);
+struct TableEntry *findListEnd(struct TableEntry *list);
+int *solvePathTwo(Vertex *vertices, int len, int dest_id, int *total_weight);
+//void zeroMatrix(int **matrix, int n);
+void printMatrix(int **matrix, int n);
 
 #endif
